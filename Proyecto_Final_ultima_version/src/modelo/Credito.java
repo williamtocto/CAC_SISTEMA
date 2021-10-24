@@ -6,6 +6,9 @@ public class Credito {
 
     private String deudor;
     private String cedulaD;
+    private int codigoD;
+    private int codigoG1;
+    private int codigoG2;
     private String cedulaG1;
     private String cedulaG2;
     private String Garante1;
@@ -18,9 +21,12 @@ public class Credito {
     private String observacion;
     private String estado;
 
-    public Credito(String deudor, String cedulaD, String cedulaG1, String cedulaG2, String Garante1, String Garante2, int codigo, double capital, float interes, int plazo, Date fecha, String observacion, String estado) {
+    public Credito(String deudor, String cedulaD, int codigoD, int codigoG1, int codigoG2, String cedulaG1, String cedulaG2, String Garante1, String Garante2, int codigo, double capital, float interes, int plazo, Date fecha, String observacion, String estado) {
         this.deudor = deudor;
         this.cedulaD = cedulaD;
+        this.codigoD = codigoD;
+        this.codigoG1 = codigoG1;
+        this.codigoG2 = codigoG2;
         this.cedulaG1 = cedulaG1;
         this.cedulaG2 = cedulaG2;
         this.Garante1 = Garante1;
@@ -37,6 +43,7 @@ public class Credito {
     public Credito() {
     }
     
+    
 
     public String getDeudor() {
         return deudor;
@@ -52,6 +59,30 @@ public class Credito {
 
     public void setCedulaD(String cedulaD) {
         this.cedulaD = cedulaD;
+    }
+
+    public int getCodigoD() {
+        return codigoD;
+    }
+
+    public void setCodigoD(int codigoD) {
+        this.codigoD = codigoD;
+    }
+
+    public int getCodigoG1() {
+        return codigoG1;
+    }
+
+    public void setCodigoG1(int codigoG1) {
+        this.codigoG1 = codigoG1;
+    }
+
+    public int getCodigoG2() {
+        return codigoG2;
+    }
+
+    public void setCodigoG2(int codigoG2) {
+        this.codigoG2 = codigoG2;
     }
 
     public String getCedulaG1() {
@@ -141,7 +172,6 @@ public class Credito {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-    
-    
 
+   
 }

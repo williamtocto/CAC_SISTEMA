@@ -6,12 +6,13 @@ public class ModeloCredito extends Credito {
 
     ConexionPG con = new ConexionPG();
 
-    public ModeloCredito(String deudor, String cedulaD, String cedulaG1, String cedulaG2, String Garante1, String Garante2, int codigo, double capital, float interes, int plazo, Date fecha, String observacion, String estado) {
-        super(deudor, cedulaD, cedulaG1, cedulaG2, Garante1, Garante2, codigo, capital, interes, plazo, fecha, observacion, estado);
+    public ModeloCredito(String deudor, String cedulaD, int codigoD, int codigoG1, int codigoG2, String cedulaG1, String cedulaG2, String Garante1, String Garante2, int codigo, double capital, float interes, int plazo, Date fecha, String observacion, String estado) {
+        super(deudor, cedulaD, codigoD, codigoG1, codigoG2, cedulaG1, cedulaG2, Garante1, Garante2, codigo, capital, interes, plazo, fecha, observacion, estado);
     }
 
     public ModeloCredito() {
     }
+
 
     public boolean grabarCredito() {
 
