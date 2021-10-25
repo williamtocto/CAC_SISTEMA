@@ -2,6 +2,7 @@ package controlador;
 
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import javax.swing.JInternalFrame;
+import modelo.ModeloCredito;
 import modelo.Modelo_Acta;
 import modelo.Modelo_Asistencia;
 import modelo.Modelo_Multa;
@@ -20,6 +21,7 @@ import vista.Vista_Reunion;
 import vista.Vista_Rol;
 import vista.Vista_Socio;
 import vista.Vista_Usuario;
+import vista.Vista_credito;
 import vista.Vista_transaccion;
 
 public class Control_VistaPrincipal {
@@ -37,21 +39,22 @@ public class Control_VistaPrincipal {
 
         // LOS DIFERENTES BOTONES DE LA VENTANA PRINCIPAL 
         vista.getMenu_MantenimientoUser().addActionListener(l -> Usuario());
-        vista.getBtn_multas().addActionListener(l-> IniciarVentanaMultas());
+        vista.getBtn_multas().addActionListener(l -> IniciarVentanaMultas());
         vista.getMenuRol().addActionListener(l -> IniciarVentanaRol());
         vista.getSubmenu_socio().addActionListener(l -> IniciarVentanaSocio());
         vista.getMenu_privilegios().addActionListener(l -> IniciarVentanaPrivilegios());
         vista.getSubmenuTransaccion().addActionListener(l -> InicarVentanaTransaccion());
         vista.getSubmenu_reunion().addActionListener(l -> IniciarVentanaReunion());
         vista.getMenuActas().addActionListener(l -> iniciarVentanaActa());
-        vista.getMenu_asistencia().addActionListener(l -> InciaciarVentanaAsistencia());
+        vista.getMenu_asistencia().addActionListener(l -> IniciarVentanaAsistencia());
         vista.getBtn_agregarSocio().addActionListener(l -> IngresarSocio());
         vista.getBtn_registrarReunion().addActionListener(l -> IniciarVentanaReunion());
-        vista.getBtn_asistencia().addActionListener(l -> InciaciarVentanaAsistencia());
+        vista.getBtn_asistencia().addActionListener(l -> IniciarVentanaAsistencia());
         vista.getBtn_actas().addActionListener(l -> iniciarVentanaActa());
         vista.getBtn_transacciones().addActionListener(l -> InicarVentanaTransaccion());
         vista.getBtn_imprimirReporte().addActionListener(l -> imprimirReporte());
         vista.getMenuMulta().addActionListener(l -> IniciarVentanaMultas());
+        vista.getMenu_Credito().addActionListener(l-> IniciarVentanaCredito());
     }
 
     public void Usuario() {
@@ -136,7 +139,7 @@ public class Control_VistaPrincipal {
         cp.iniciarControl();
     }
 
-    public void InciaciarVentanaAsistencia() {
+    public void IniciarVentanaAsistencia() {
         Modelo_Asistencia modelo = new Modelo_Asistencia();
         Vista_Asistencia Vista = new Vista_Asistencia();
         Centrar(Vista);
@@ -145,12 +148,20 @@ public class Control_VistaPrincipal {
     }
 
     public void IniciarVentanaMultas() {
-        System.out.println("multa");
         Modelo_Multa mod = new Modelo_Multa();
         Vista_Multa vm = new Vista_Multa();
         Centrar(vm);
         Control_Multa cm = new Control_Multa(mod, vm);
         cm.iniciarControl();
+
+    }
+
+    public void IniciarVentanaCredito() {
+        ModeloCredito mo = new ModeloCredito();
+        Vista_credito vi = new Vista_credito();
+        Centrar(vi);
+        ControlCredito cc = new ControlCredito(mo, vi);
+        cc.IniciarControl();
 
     }
 }

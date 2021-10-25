@@ -193,17 +193,17 @@ public class Control_Privilegios {
                         mp.setEstado_rol("FALSE");
                         mp.modificarPrivilegios();
                     }
-                    /*
-        if (vp.getRad_multa().isSelected()) {
-            mp.setCod_opcion(4);
-            mp.setEstado_rol("TRUE");
-            mp.modificarPrivilegios();
-        } else {
-            mp.setCod_opcion(4);
-            mp.setEstado_rol("FALSE");
-            mp.modificarPrivilegios();
-        }
-                     */
+
+                    if (vp.getRad_multa().isSelected()) {
+                        mp.setCod_opcion(4);
+                        mp.setEstado_rol("TRUE");
+                        mp.modificarPrivilegios();
+                    } else {
+                        mp.setCod_opcion(4);
+                        mp.setEstado_rol("FALSE");
+                        mp.modificarPrivilegios();
+                    }
+
                     if (vp.getRad_usuario().isSelected()) {
                         mp.setCod_opcion(5);
                         mp.setEstado_rol("TRUE");

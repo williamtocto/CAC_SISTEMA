@@ -49,6 +49,7 @@ public class Vista_Principal extends javax.swing.JFrame {
         menu_asistencia = new javax.swing.JMenuItem();
         menu_transaccion = new javax.swing.JMenu();
         submenuTransaccion = new javax.swing.JMenuItem();
+        menu_Credito = new javax.swing.JMenuItem();
         menu_Multas = new javax.swing.JMenu();
         menuMulta = new javax.swing.JMenuItem();
         menuPrincipal_rol = new javax.swing.JMenu();
@@ -232,6 +233,14 @@ public class Vista_Principal extends javax.swing.JFrame {
         submenuTransaccion.setText("Registrar Transaccion");
         menu_transaccion.add(submenuTransaccion);
 
+        menu_Credito.setText("Credito");
+        menu_Credito.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menu_CreditoActionPerformed(evt);
+            }
+        });
+        menu_transaccion.add(menu_Credito);
+
         jMenuBar1.add(menu_transaccion);
 
         menu_Multas.setText("Multa");
@@ -350,6 +359,10 @@ public class Vista_Principal extends javax.swing.JFrame {
     private void submenu_reunionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submenu_reunionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_submenu_reunionActionPerformed
+
+    private void menu_CreditoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menu_CreditoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menu_CreditoActionPerformed
 
     public JDesktopPane getDesk_Principal() {
         return desk_Principal;
@@ -512,6 +525,14 @@ public class Vista_Principal extends javax.swing.JFrame {
         this.menuMulta = menuMulta;
     }
 
+    public JMenuItem getMenu_Credito() {
+        return menu_Credito;
+    }
+
+    public void setMenu_Credito(JMenuItem menu_Credito) {
+        this.menu_Credito = menu_Credito;
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_actas;
@@ -542,6 +563,7 @@ public class Vista_Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuMulta;
     private javax.swing.JMenu menuPrincipal_rol;
     private javax.swing.JMenuItem menuRol;
+    private javax.swing.JMenuItem menu_Credito;
     private javax.swing.JMenuItem menu_MantenimientoUser;
     private javax.swing.JMenu menu_Multas;
     private javax.swing.JMenuItem menu_asistencia;
