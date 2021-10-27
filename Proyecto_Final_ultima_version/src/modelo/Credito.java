@@ -17,15 +17,15 @@ public class Credito {
     private double capital;
     private float interes;
     private int plazo;
-    private Date fecha;
+    private String fecha;
     private String observacion;
     private String estado;
-    private Date fecha_fin;
+    private String fecha_fin;
    
     public Credito() {
     }
 
-    public Credito(String deudor, String cedulaD, int codigoD, int codigoG1, int codigoG2, String cedulaG1, String cedulaG2, String Garante1, String Garante2, int codigo, double capital, float interes, int plazo, Date fecha, String observacion, String estado, Date fecha_fin) {
+    public Credito(String deudor, String cedulaD, int codigoD, int codigoG1, int codigoG2, String cedulaG1, String cedulaG2, String Garante1, String Garante2, int codigo, double capital, float interes, int plazo, String fecha, String observacion, String estado, String fecha_fin) {
         this.deudor = deudor;
         this.cedulaD = cedulaD;
         this.codigoD = codigoD;
@@ -149,14 +149,7 @@ public class Credito {
         this.plazo = plazo;
     }
 
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
+  
     public String getObservacion() {
         return observacion;
     }
@@ -173,13 +166,23 @@ public class Credito {
         this.estado = estado;
     }
 
-    public Date getFecha_fin() {
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getFecha_fin() {
         return fecha_fin;
     }
 
-    public void setFecha_fin(Date fecha_fin) {
+    public void setFecha_fin(String fecha_fin) {
         this.fecha_fin = fecha_fin;
     }
+
+
     
    
 }

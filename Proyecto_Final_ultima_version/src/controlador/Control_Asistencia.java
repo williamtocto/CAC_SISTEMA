@@ -152,9 +152,6 @@ public class Control_Asistencia {
             DefaultTableModel tblModel;
             tblModel = (DefaultTableModel) vista.getTabla().getModel();
             tblModel.setNumRows(0);
-            vista.getTabla().getColumnModel().getColumn(0).setPreferredWidth(5);
-            vista.getTabla().getColumnModel().getColumn(3).setPreferredWidth(3);
-
             codigo_reunion = mr.codigoReunion(fecha);
 
             if (codigo_reunion == 0) {
