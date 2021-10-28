@@ -291,7 +291,7 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="75" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="txt_buscar" min="-2" pref="175" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
               <Component id="btn_registrar" min="-2" max="-2" attributes="0"/>
@@ -359,7 +359,7 @@
         <Component class="javax.swing.JTable" name="tabla">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="10" rowCount="4">
+              <Table columnCount="11" rowCount="4">
                 <Column editable="true" title="N&#xb0;" type="java.lang.Object"/>
                 <Column editable="true" title="Deudor" type="java.lang.Object"/>
                 <Column editable="true" title="Garante 1" type="java.lang.Object"/>
@@ -367,7 +367,8 @@
                 <Column editable="true" title="Capital" type="java.lang.Object"/>
                 <Column editable="true" title="Interes" type="java.lang.Object"/>
                 <Column editable="true" title="Plazo" type="java.lang.Object"/>
-                <Column editable="true" title="Fecha" type="java.lang.Object"/>
+                <Column editable="true" title="Fecha Fin" type="java.lang.Object"/>
+                <Column editable="true" title="Fecha Solicitud" type="java.lang.Object"/>
                 <Column editable="true" title="Observacion" type="java.lang.Object"/>
                 <Column editable="true" title="Estado" type="java.lang.Object"/>
               </Table>

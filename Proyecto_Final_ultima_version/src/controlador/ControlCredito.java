@@ -1,9 +1,12 @@
 package controlador;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -28,9 +31,26 @@ public class ControlCredito {
         this.vista = vista;
         vista.setTitle("Creditos");
         vista.setVisible(true);
+        cargarlista("");
+        vista.getBtn_aprobar().setEnabled(false);
     }
 
     public void IniciarControl() {
+
+        KeyListener kl = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                cargarlista(vista.getTxt_buscar().getText());
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        };
         vista.getBtn_aprobar().addActionListener(l -> {
             try {
                 DefinirMetodo(n);
@@ -54,6 +74,9 @@ public class ControlCredito {
             }
         });
 
+        vista.getTxt_buscar().addKeyListener(kl);
+        vista.getBtn_verirficar().addActionListener(l -> comprobarSolicitud());
+
     }
 
     public void DefinirMetodo(int n) throws SQLException {
@@ -65,6 +88,26 @@ public class ControlCredito {
             fila = vista.getTabla().getSelectedRow();
             modificar();
         }
+    }
+
+    public void comprobarSolicitud() {
+        Modelo_Socio so = new Modelo_Socio();
+        int codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
+        modelo.setCodigoD(codigo_socio);
+        int cred = modelo.codigoCredito();
+        List<Credito> lista = new ArrayList<Credito>();
+        if (cred != 0) {
+            lista = modelo.DatosSocio();
+            lista.stream().forEach(l -> {
+                vista.getTxt_solicitante().setText("El Socio " + l.getDeudor() + " actualmente cuenta con credito Vigente");
+            });
+        } else {
+            lista = modelo.DatosSocio();
+            lista.stream().forEach(l -> {
+                vista.getTxt_solicitante().setText("El Socio " + l.getDeudor() + " puede adquirir su Credito");
+            });
+        }
+
     }
 
     public void modificar() {
@@ -94,16 +137,19 @@ public class ControlCredito {
 
     }
 
-    public void cargarlista() {
+    public void cargarlista(String aguja) {
         List<Credito> lista = new ArrayList<Credito>();
+        lista = modelo.cargarLista(aguja);
         DefaultTableModel tblModel;
         tblModel = (DefaultTableModel) vista.getTabla().getModel();
         tblModel.setNumRows(0);
+        Collections.sort(lista, (x, y) -> x.getFecha().compareToIgnoreCase(y.getFecha()));
+        Collections.reverse(lista);
         lista.stream().forEach(l -> {
-            String[] credito ={
-                String.valueOf(l.getCodigo()),l.getDeudor(),l.getGarante1(),l.getGarante2(),String.valueOf(l.getCapital()
-                ),String.valueOf(l.getInteres()),String.valueOf(l.getPlazo()),String.valueOf(l.getFecha())
-                ,l.getObservacion(),l.getEstado()
+            String[] credito = {
+                String.valueOf(l.getCodigo()), l.getDeudor(), l.getGarante1(), l.getGarante2(), String.valueOf(l.getCapital()
+                ), String.valueOf(l.getInteres()), String.valueOf(l.getPlazo()), String.valueOf(l.getFecha()), String.valueOf(l.getFecha_fin()),
+                l.getObservacion(), l.getEstado()
             };
             tblModel.addRow(credito);
         });
@@ -115,6 +161,7 @@ public class ControlCredito {
         Modelo_Socio so = new Modelo_Socio();
         int codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
         int garante_1 = so.codigoSocio(vista.getTxt_cedulaG1().getText());
+
         int garante_2 = so.codigoSocio(vista.getTxt_G2().getText());
         System.out.println(codigo_socio + " " + garante_1 + " " + garante_2);
 
@@ -144,7 +191,6 @@ public class ControlCredito {
 
         if (modelo.grabarCredito()) {
             JOptionPane.showMessageDialog(null, "Credito guardado con exito", "CAC", 1);
-            System.out.println("holaaaaaa");
             Modelo_Garante mo = new Modelo_Garante();
             int cod_credito = modelo.codigoCredito();
             mo.setCod_credito(cod_credito);
