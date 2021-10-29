@@ -92,30 +92,43 @@ public class ControlCredito {
     }
 
     public void comprobarSolicitud() {
-        Modelo_Socio so = new Modelo_Socio();
-        int codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
-        modelo.setCodigoD(codigo_socio);
-        int cred = modelo.codigoCredito();
-        List<Credito> lista = new ArrayList<Credito>();
-        if (cred != 0) {
-            lista = modelo.DatosSocio();
-            lista.stream().forEach(l -> {
-                vista.getTxt_solicitante().setText("El Socio " + l.getDeudor() + " actualmente cuenta con credito Vigente");
-            });
-            vista.getBtn_aprobar().setEnabled(true);
-            
+        if (vista.getCedula_D().getText().equals("")) {
+               JOptionPane.showMessageDialog(null, "Ingresar la cedula del solicitante", "CAC", 0);
+        } else if (vista.getTxt_cedulaG1().getText().equals("")) {
+               JOptionPane.showMessageDialog(null, "Ingresar la cedula del garante 1", "CAC", 0);
+        } else if (vista.getTxt_capital().getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Ingresar el capital", "CAC", 0);
+        } else if (vista.getTxt_tasa().getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Ingresar la tasa de interes", "CAC", 0);
+        } else if (vista.getTxt_plazo().getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Ingresar el plazo", "CAC", 0);
+        } else if (vista.getTxt_observacion().getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Ingresar la observacion", "CAC", 0);
         } else {
-            lista = modelo.DatosSocio();
-            lista.stream().forEach(l -> {
-                vista.getTxt_solicitante().setText("El Socio " + l.getDeudor() + " puede adquirir su Credito");
-            });
-            vista.getBtn_aprobar().setEnabled(true);
+            Modelo_Socio so = new Modelo_Socio();
+            int codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
+            modelo.setCodigoD(codigo_socio);
+            int cred = modelo.codigoCredito();
+            List<Credito> lista = new ArrayList<Credito>();
+            if (cred != 0) {
+                lista = modelo.DatosSocio();
+                lista.stream().forEach(l -> {
+                    vista.getTxt_solicitante().setText("El Socio " + l.getDeudor() + " actualmente cuenta con credito Vigente");
+                });
+                vista.getBtn_aprobar().setEnabled(true);
+
+            } else {
+                lista = modelo.DatosSocio();
+                lista.stream().forEach(l -> {
+                    vista.getTxt_solicitante().setText("El Socio " + l.getDeudor() + " puede adquirir su Credito");
+                });
+                vista.getBtn_aprobar().setEnabled(true);
+            }
         }
 
     }
 
     public void comprobarGarante() {
-        
 
     }
 

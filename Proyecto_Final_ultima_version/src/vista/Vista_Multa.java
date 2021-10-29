@@ -249,6 +249,11 @@ public class Vista_Multa extends javax.swing.JInternalFrame {
         btn_buscar.setText("Consultar");
         btn_buscar.setToolTipText("Cosultar multa por fecha");
         btn_buscar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 153, 51)));
+        btn_buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_buscarActionPerformed(evt);
+            }
+        });
         getContentPane().add(btn_buscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 97, -1));
 
         btn_cobrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/vista_iconos/multa.png"))); // NOI18N
@@ -275,6 +280,10 @@ public class Vista_Multa extends javax.swing.JInternalFrame {
     private void txt_cedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cedulaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_cedulaActionPerformed
+
+    private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_buscarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
