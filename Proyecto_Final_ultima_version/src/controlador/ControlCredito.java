@@ -33,6 +33,7 @@ public class ControlCredito {
         vista.setVisible(true);
         cargarlista("");
         vista.getBtn_aprobar().setEnabled(false);
+        System.out.println("HOlA MYRIAN BIENVENIDA, LE QUIERO");
     }
 
     public void IniciarControl() {
