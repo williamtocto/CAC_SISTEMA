@@ -101,12 +101,20 @@ public class ControlCredito {
             lista.stream().forEach(l -> {
                 vista.getTxt_solicitante().setText("El Socio " + l.getDeudor() + " actualmente cuenta con credito Vigente");
             });
+            vista.getBtn_aprobar().setEnabled(true);
+            
         } else {
             lista = modelo.DatosSocio();
             lista.stream().forEach(l -> {
                 vista.getTxt_solicitante().setText("El Socio " + l.getDeudor() + " puede adquirir su Credito");
             });
+            vista.getBtn_aprobar().setEnabled(true);
         }
+
+    }
+
+    public void comprobarGarante() {
+        
 
     }
 
@@ -157,59 +165,45 @@ public class ControlCredito {
     }
 
     public void grabarCredito() {
+        int op = JOptionPane.showOptionDialog(null, "Esta Seguro en Aprobar Este Credito", "",
+                JOptionPane.YES_NO_CANCEL_OPTION, 2, null, new Object[]{"SI", "NO",}, null);
 
-        Modelo_Socio so = new Modelo_Socio();
-        int codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
-        int garante_1 = so.codigoSocio(vista.getTxt_cedulaG1().getText());
+        if (op == 0) {
+            Modelo_Socio so = new Modelo_Socio();
+            int codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
+            int garante_1 = so.codigoSocio(vista.getTxt_cedulaG1().getText());
+            int garante_2 = so.codigoSocio(vista.getTxt_G2().getText());
+            double capital = Double.parseDouble(vista.getTxt_capital().getText());
+            float tasa_interes = Float.parseFloat(vista.getTxt_tasa().getText());
+            int plazo_meses = Integer.parseInt(vista.getTxt_plazo().getText());
+            Date fecha_credito;
+            Calendar c = Calendar.getInstance();
+            fecha_credito = c.getTime();
+            c.add(Calendar.MONTH, +plazo_meses);
+            Date fecha_fin = c.getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String formato = sdf.format(fecha_credito);
+            String formato1 = sdf.format(fecha_fin);
+            String Observacion = vista.getTxt_observacion().getText();
+            String estado = "Vigente";
+            modelo.setCodigoD(codigo_socio);
+            modelo.setCodigoG1(garante_1);
+            modelo.setCodigoG2(garante_2);
+            modelo.setPlazo(plazo_meses);
+            modelo.setInteres(tasa_interes);
+            modelo.setCapital(capital);
+            modelo.setFecha(formato);
+            modelo.setFecha_fin(formato1);
+            modelo.setObservacion(Observacion);
+            modelo.setEstado(estado);
 
-        int garante_2 = so.codigoSocio(vista.getTxt_G2().getText());
-        System.out.println(codigo_socio + " " + garante_1 + " " + garante_2);
-
-        double capital = Double.parseDouble(vista.getTxt_capital().getText());
-        float tasa_interes = Float.parseFloat(vista.getTxt_tasa().getText());
-        int plazo_meses = Integer.parseInt(vista.getTxt_plazo().getText());
-        Date fecha_credito;
-        Calendar c = Calendar.getInstance();
-        fecha_credito = c.getTime();
-        c.add(Calendar.MONTH, +plazo_meses);
-        Date fecha_fin = c.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String formato = sdf.format(fecha_credito);
-        String formato1 = sdf.format(fecha_fin);
-        String Observacion = vista.getTxt_observacion().getText();
-        String estado = "Vigente";
-        modelo.setCodigoD(codigo_socio);
-        modelo.setCodigoG1(garante_1);
-        modelo.setCodigoG2(garante_2);
-        modelo.setPlazo(plazo_meses);
-        modelo.setInteres(tasa_interes);
-        modelo.setCapital(capital);
-        modelo.setFecha(formato);
-        modelo.setFecha_fin(formato1);
-        modelo.setObservacion(Observacion);
-        modelo.setEstado(estado);
-
-        if (modelo.grabarCredito()) {
-            JOptionPane.showMessageDialog(null, "Credito guardado con exito", "CAC", 1);
-            Modelo_Garante mo = new Modelo_Garante();
-            int cod_credito = modelo.codigoCredito();
-            mo.setCod_credito(cod_credito);
-            mo.setEstado(true);
-
-            if (garante_1 != 0) {
-                System.out.println("1111");
-                mo.setCod_socio(garante_1);
-                mo.grabarGarante();
+            if (modelo.grabarCredito()) {
+                JOptionPane.showMessageDialog(null, "Credito guardado con exito", "CAC", 1);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al grabar", "CAC", 0);
             }
-            if (garante_2 != 0) {
-                System.out.println("3");
-                mo.setCod_socio(garante_2);
-                mo.grabarGarante();
-            }
-
-        } else {
-            JOptionPane.showMessageDialog(null, "Error al grabar", "CAC", 0);
         }
+
     }
 
 }
