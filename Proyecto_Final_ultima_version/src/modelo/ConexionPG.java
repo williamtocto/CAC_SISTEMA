@@ -17,7 +17,7 @@ public class ConexionPG {
     //Datos de su conexion local:
     private String cadenaConexion="jdbc:postgresql://localhost:5432/cac_sistema";
     private String usuarioPG="postgres";
-    private String contrasPG="mvelmgqh";
+    private String contrasPG="1234";
 
     public ConexionPG() {
         try {

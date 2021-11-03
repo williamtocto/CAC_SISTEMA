@@ -121,20 +121,19 @@ public class ModeloCredito extends Credito {
     }
 
     public int comprobarGarante() {
-        String sql = "SELECT * from garante where cod_socio in(" + getCodigoG1() + "," + getCedulaG2() + ") "
-                + "AND estado_garante=true";
+        String sql = "SELECT cod_garante from garante where cod_socio in(" + getCodigoG1() + "," + getCodigoG2()+ ") "
+                + " AND estado_garante=true";
         try {
             int fila = 0;
             ResultSet rs = con.consulta(sql);
             while (rs.next()) {
-               fila++;
+                fila++;
             }
             return fila;
         } catch (SQLException ex) {
             Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
         }
-        
     }
 
     public int comprobarSolicitante() {
@@ -156,10 +155,10 @@ public class ModeloCredito extends Credito {
 
     public List<Credito> DatosSocio() {
 
-        String sql = "Select nombre_socio||' '||apellido_socio as deudor from  socio s join credito c on s.codigo_socio=c.cod_socio where cod_socio=" + getCodigoD()
-                + " and estado='Vigente'";
-        List<Credito> lista = new ArrayList<Credito>();
+        String sql = "Select nombre_socio||' '||apellido_socio as deudor from  socio s join credito c on s.codigo_socio=c.cod_socio "
+                + "where cod_socio=" + getCodigoD() + " and estado='Vigente'";
 
+        List<Credito> lista = new ArrayList<Credito>();
         ResultSet rs = con.consulta(sql);
         try {
             while (rs.next()) {
@@ -170,7 +169,6 @@ public class ModeloCredito extends Credito {
             rs.close();
             return lista;
         } catch (SQLException ex) {
-
             Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }

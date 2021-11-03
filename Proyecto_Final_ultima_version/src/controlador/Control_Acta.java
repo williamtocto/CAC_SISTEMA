@@ -204,7 +204,9 @@ public final class Control_Acta {
             fila = vista.getTabla_acta().getSelectedRow();
             ModificarActa();
         }
+       
     }
+   
     
     public void SeleccionarPdf() {
         JFileChooser jfc = new JFileChooser();
