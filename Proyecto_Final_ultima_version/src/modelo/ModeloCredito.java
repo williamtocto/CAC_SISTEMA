@@ -88,9 +88,12 @@ public class ModeloCredito extends Credito {
             rs.close();
             String sql1 = "select cod_credito,s1.nombre_socio||' '||s1.apellido_socio as deudor,"
                     + "s2.nombre_socio||' '|| s2.apellido_socio as garante_1,"
-                    + " capital,tasa_interes,plazo_meses,fecha_credito,fecha_finalizacion,observacion,estado "
+                    + "s3.nombre_socio||' '||s3.apellido_socio as garante_2,"
+                    + "capital,tasa_interes,plazo_meses,fecha_credito,fecha_finalizacion,observacion,estado "
                     + "from socio s1 join credito c1 on c1.cod_socio=s1.codigo_socio "
-                    + "join socio s2 on c1.garante_1=s2.codigo_socio where garante_2 is null "
+                    + "join socio s2 on c1.garante_1=s2.codigo_socio "
+                    + "join socio s3 on c1.garante_2=s3.codigo_socio "
+                    + "where garante_2 is null "
                     + "and UPPER(s1.nombre_socio||' '||s1.apellido_socio) like  UPPER('%" + aguja + "%')";
             ResultSet rs1 = con.consulta(sql1);
 
@@ -99,6 +102,7 @@ public class ModeloCredito extends Credito {
                 c.setCodigo(rs1.getInt("cod_credito"));
                 c.setDeudor(rs1.getString("deudor"));
                 c.setGarante1(rs1.getString("garante_1"));
+                c.setGarante2(rs1.getString("garante_2"));
                 c.setCapital(rs1.getDouble("capital"));
                 c.setInteres(rs1.getFloat("tasa_interes"));
                 c.setPlazo(rs1.getInt("plazo_meses"));
@@ -120,8 +124,57 @@ public class ModeloCredito extends Credito {
 
     }
 
-    public int comprobarGarante() {
-        String sql = "SELECT cod_garante from garante where cod_socio in(" + getCodigoG1() + "," + getCodigoG2()+ ") "
+    public List<Credito> filtrarCredito(String aguja) {
+
+        List<Credito> lista = new ArrayList<Credito>();
+        String sql1;
+        if (!aguja.equals("")) {
+            sql1 = "select cod_credito,s1.nombre_socio||' '||s1.apellido_socio as deudor,"
+                    + "s2.nombre_socio||' '|| s2.apellido_socio as garante_1,"
+                    + "s3.nombre_socio||' '||s3.apellido_socio as garante_2,"
+                    + " capital,tasa_interes,plazo_meses,fecha_credito,fecha_finalizacion,observacion,estado "
+                    + "from socio s1 join credito c1 on c1.cod_socio=s1.codigo_socio "
+                    + "join socio s2 on c1.garante_1=s2.codigo_socio "
+                    + "join socio s3 on c1.garante_2=s3.codigo_socio "
+                    + " where estado= '" + aguja + "'";
+
+        } else {
+            sql1 = "select cod_credito,s1.nombre_socio||' '||s1.apellido_socio as deudor,"
+                    + "s2.nombre_socio||' '|| s2.apellido_socio as garante_1,"
+                    + "s3.nombre_socio||' '||s3.apellido_socio as garante_2,"
+                    + " capital,tasa_interes,plazo_meses,fecha_credito,fecha_finalizacion,observacion,estado "
+                    + "from socio s1 join credito c1 on c1.cod_socio=s1.codigo_socio "
+                    + "join socio s2 on c1.garante_1=s2.codigo_socio "
+                    + "join socio s3 on c1.garante_2=s3.codigo_socio ";
+        }
+        ResultSet rs1 = con.consulta(sql1);
+        try {
+            while (rs1.next()) {
+                Credito c = new Credito();
+                c.setCodigo(rs1.getInt("cod_credito"));
+                c.setDeudor(rs1.getString("deudor"));
+                c.setGarante1(rs1.getString("garante_1"));
+                c.setGarante2(rs1.getString("garante_2"));
+                c.setCapital(rs1.getDouble("capital"));
+                c.setInteres(rs1.getFloat("tasa_interes"));
+                c.setPlazo(rs1.getInt("plazo_meses"));
+                c.setFecha(rs1.getString("fecha_credito"));
+                c.setFecha_fin(rs1.getString("fecha_finalizacion"));
+                c.setObservacion(rs1.getString("observacion"));
+                c.setEstado(rs1.getString("estado"));
+                lista.add(c);
+            }
+            rs1.close();
+            return lista;
+        } catch (SQLException ex) {
+            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+    }
+
+    public int comprobarGarante(int cod_garante) {
+        String sql = "SELECT cod_garante from garante where cod_socio =" + cod_garante + " "
                 + " AND estado_garante=true";
         try {
             int fila = 0;
@@ -137,7 +190,7 @@ public class ModeloCredito extends Credito {
     }
 
     public int comprobarSolicitante() {
-        String sql = "SELECT cod_credito from credito where estado= 'Vigente'";
+        String sql = "SELECT * from credito where estado= 'Vigente' and cod_socio= " + getCodigoD();
         ResultSet rs = con.consulta(sql);
         int fila = 0;
         try {
@@ -153,21 +206,71 @@ public class ModeloCredito extends Credito {
 
     }
 
-    public List<Credito> DatosSocio() {
+    public List<Credito> listarCredito(int codigo) {
 
-        String sql = "Select nombre_socio||' '||apellido_socio as deudor from  socio s join credito c on s.codigo_socio=c.cod_socio "
-                + "where cod_socio=" + getCodigoD() + " and estado='Vigente'";
+        String sql = "SELECT cod_socio,garante_1,garante_2,capital,tasa_interes,plazo_meses,observacion "
+                + "from credito where cod_credito=" + codigo;
 
         List<Credito> lista = new ArrayList<Credito>();
+        ResultSet rs = con.consulta(sql);
+
+        try {
+
+            while (rs.next()) {
+                Credito c = new Credito();
+                c.setDeudor(rs.getString("cod_socio"));
+                c.setGarante1(rs.getString("garante_1"));
+                c.setGarante2(rs.getString("garante_2"));
+                c.setCapital(rs.getDouble("capital"));
+                c.setInteres(rs.getFloat("tasa_interes"));
+                c.setPlazo(rs.getInt("plazo_meses"));
+                c.setObservacion(rs.getString("observacion"));
+                lista.add(c);
+            }
+            rs.close();
+            return lista;
+
+        } catch (SQLException ex) {
+
+            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            return lista;
+        }
+
+    }
+
+    public String DatosSocio() {
+
+        String sql = "Select nombre_socio||' '||apellido_socio as deudor from  socio "
+                + "where codigo_socio=" + getCodigoD() + ";";
+
+        String lista = null;
         ResultSet rs = con.consulta(sql);
         try {
             while (rs.next()) {
                 Credito c = new Credito();
                 c.setDeudor(rs.getString("deudor"));
-                lista.add(c);
+                lista = rs.getString("deudor");
             }
             rs.close();
             return lista;
+        } catch (SQLException ex) {
+            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+    }
+
+    public String cedulas(int cod) {
+        String sql = "Select cedula_socio from socio where codigo_socio=" + cod;
+        ResultSet rs = con.consulta(sql);
+        String cedula = null;
+        try {
+            while (rs.next()) {
+                Credito c = new Credito();
+                cedula= rs.getString("cedula_socio");
+            }
+            rs.close();
+            return cedula;
         } catch (SQLException ex) {
             Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
             return null;

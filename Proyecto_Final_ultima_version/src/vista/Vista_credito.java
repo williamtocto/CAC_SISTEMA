@@ -2,6 +2,7 @@
 package vista;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
@@ -184,6 +185,14 @@ public class Vista_credito extends javax.swing.JInternalFrame {
         this.txt_buscar = txt_buscar;
     }
 
+    public JComboBox<String> getCombo_filtrar() {
+        return combo_filtrar;
+    }
+
+    public void setCombo_filtrar(JComboBox<String> combo_filtrar) {
+        this.combo_filtrar = combo_filtrar;
+    }
+
   
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -222,6 +231,7 @@ public class Vista_credito extends javax.swing.JInternalFrame {
         tabla = new javax.swing.JTable();
         txt_buscar = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        combo_filtrar = new javax.swing.JComboBox<>();
 
         txt_G2.setToolTipText("Campo Opcional");
 
@@ -360,7 +370,7 @@ public class Vista_credito extends javax.swing.JInternalFrame {
                     .addGroup(jDialog1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         setClosable(true);
@@ -382,12 +392,19 @@ public class Vista_credito extends javax.swing.JInternalFrame {
                 {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "N°", "Deudor", "Garante 1", "Garante 2", "Capital", "Interes", "Plazo", "Fecha Fin", "Fecha Solicitud", "Observacion", "Estado"
+                "N°", "Deudor", "Garante 1", "Garante 2", "Capital", "Interes", "Plazo", "Fecha Solicitud", "Fecha Fin", "Observacion", "Estado"
             }
         ));
         jScrollPane1.setViewportView(tabla);
 
         jLabel1.setText("Buscar:");
+
+        combo_filtrar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<Filtrar>", "Vigentes", "Pagados", "Todos" }));
+        combo_filtrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                combo_filtrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -399,14 +416,16 @@ public class Vista_credito extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addComponent(txt_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(combo_filtrar, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(btn_registrar)
                 .addGap(18, 18, 18)
                 .addComponent(btn_modificar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btn_eliminar)
                 .addGap(18, 18, 18)
                 .addComponent(btn_imprmir)
-                .addGap(251, 251, 251))
+                .addGap(167, 167, 167))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1006, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -414,15 +433,16 @@ public class Vista_credito extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
+                .addGap(54, 54, 54)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_eliminar)
                     .addComponent(btn_modificar)
                     .addComponent(btn_registrar)
                     .addComponent(btn_imprmir)
                     .addComponent(txt_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(45, 45, 45)
+                    .addComponent(jLabel1)
+                    .addComponent(combo_filtrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(32, Short.MAX_VALUE))
         );
@@ -434,6 +454,10 @@ public class Vista_credito extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_capitalActionPerformed
 
+    private void combo_filtrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_combo_filtrarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_combo_filtrarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_aprobar;
@@ -444,6 +468,7 @@ public class Vista_credito extends javax.swing.JInternalFrame {
     private javax.swing.JButton btn_registrar;
     private javax.swing.JButton btn_verirficar;
     private javax.swing.JTextField cedula_D;
+    private javax.swing.JComboBox<String> combo_filtrar;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

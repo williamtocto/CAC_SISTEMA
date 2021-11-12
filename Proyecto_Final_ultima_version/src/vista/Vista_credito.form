@@ -121,7 +121,7 @@
                           <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="39" max="32767" attributes="0"/>
+                  <EmptySpace pref="42" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -294,14 +294,16 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="txt_buscar" min="-2" pref="175" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
+              <Component id="combo_filtrar" min="-2" pref="131" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Component id="btn_registrar" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btn_modificar" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btn_eliminar" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btn_imprmir" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="251" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="167" max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <Component id="jScrollPane1" min="-2" pref="1006" max="-2" attributes="0"/>
@@ -312,7 +314,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btn_eliminar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btn_modificar" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -320,8 +322,9 @@
                   <Component id="btn_imprmir" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txt_buscar" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="combo_filtrar" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="340" max="-2" attributes="0"/>
               <EmptySpace pref="32" max="32767" attributes="0"/>
           </Group>
@@ -367,8 +370,8 @@
                 <Column editable="true" title="Capital" type="java.lang.Object"/>
                 <Column editable="true" title="Interes" type="java.lang.Object"/>
                 <Column editable="true" title="Plazo" type="java.lang.Object"/>
-                <Column editable="true" title="Fecha Fin" type="java.lang.Object"/>
                 <Column editable="true" title="Fecha Solicitud" type="java.lang.Object"/>
+                <Column editable="true" title="Fecha Fin" type="java.lang.Object"/>
                 <Column editable="true" title="Observacion" type="java.lang.Object"/>
                 <Column editable="true" title="Estado" type="java.lang.Object"/>
               </Table>
@@ -383,6 +386,24 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Buscar:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="combo_filtrar">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="&lt;Filtrar&gt;"/>
+            <StringItem index="1" value="Vigentes"/>
+            <StringItem index="2" value="Pagados"/>
+            <StringItem index="3" value="Todos"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="combo_filtrarActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
