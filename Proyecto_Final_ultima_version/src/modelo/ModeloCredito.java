@@ -188,6 +188,12 @@ public class ModeloCredito extends Credito {
             return 0;
         }
     }
+    
+    public void ModificarCredito() {
+        String sql="UPDATE FROM CREDITO";
+        
+        
+    }
 
     public int comprobarSolicitante() {
         String sql = "SELECT * from credito where estado= 'Vigente' and cod_socio= " + getCodigoD();

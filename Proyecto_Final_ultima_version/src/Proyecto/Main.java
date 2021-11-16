@@ -13,7 +13,6 @@ public class Main {
         Vista_Login vista = new Vista_Login();
         Control_Login control = new Control_Login(ml, vista);
         control.IniciaControl();
-        System.out.println("hola");
 
     }
 
