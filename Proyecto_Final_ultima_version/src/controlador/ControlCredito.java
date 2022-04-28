@@ -30,6 +30,7 @@ public class ControlCredito {
     int n;
 
     public ControlCredito(ModeloCredito modelo, Vista_credito vista) {
+        System.out.println("Te amoooo");
         this.modelo = modelo;
         this.vista = vista;
         vista.setTitle("Creditos");
