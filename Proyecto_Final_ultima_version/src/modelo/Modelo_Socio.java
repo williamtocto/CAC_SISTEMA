@@ -224,5 +224,30 @@ public class Modelo_Socio extends Socio {
         }
 
     }
+    
+    
+    
+    public String nombre(String cedula) {
+
+        String socio = null;
+
+        String sql = "SELECT nombre_socio||' '|| apellido_socio as nombre from socio where codigo_socio= '" + cedula + "'";
+        ResultSet rs = con.consulta(sql);
+        try {
+            while (rs.next()) {
+                System.out.println(rs.getString("nombre"));
+                socio= rs.getString("nombre");
+            }
+            return socio;
+        } catch (SQLException ex) {
+            Logger.getLogger(Modelo_Socio.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+    }
+    
+    
+   
+
 
 }

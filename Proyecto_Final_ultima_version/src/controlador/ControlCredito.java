@@ -1,9 +1,7 @@
 package controlador;
 
-import java.awt.Desktop;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -96,6 +94,8 @@ public class ControlCredito {
         vista.getBtn_verirficar().addActionListener(l -> comprobarSolicitud());
 
     }
+    
+    
 
     public void DefinirMetodo(int n) throws SQLException {
 
@@ -109,6 +109,8 @@ public class ControlCredito {
     }
 
     public void comprobarSolicitud() {
+        int op = 0;
+
         if (vista.getCedula_D().getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Ingresar la cedula del solicitante", "CAC", 0);
         } else if (vista.getTxt_cedulaG1().getText().equals("")) {
@@ -139,30 +141,48 @@ public class ControlCredito {
                 String lista;
                 if (cred != 0) {
                     lista = modelo.DatosSocio();
+
                     vista.getTxt_solicitante().setText("\nEl Socio " + lista + " actualmente cuenta con credito Vigente");
                     vista.getBtn_aprobar().setEnabled(true);
+
                 } else {
                     lista = modelo.DatosSocio();
-                    vista.getTxt_solicitante().setText("\nEl Socio " + lista + " puede adquirir su Credito");
-                    vista.getBtn_aprobar().setEnabled(true);
-                }
-                codigo_socio = so.codigoSocio(vista.getTxt_cedulaG1().getText());
-                String mensaje = null;
-                if (codigo_socio != 0) {
-                    mensaje = comprobarGarante(codigo_socio);
-                    System.out.println(mensaje + " mensajeeeee1");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Este Garante 1 no existe");
-                }
-                codigo_socio = so.codigoSocio(vista.getTxt_G2().getText());
-                if (!vista.getTxt_G2().getText().equals("")) {
-                    if (codigo_socio != 0) {
-                        mensaje = mensaje + " " + comprobarGarante(codigo_socio);
+
+                    if (lista == null) {
+                        JOptionPane.showMessageDialog(null, "Cedula solicitante incorrecta", "", 0);
+                        op = 1;
                     } else {
-                        JOptionPane.showMessageDialog(null, "Este Garante 2 no existe");
+                        vista.getTxt_solicitante().setText("\nEl Socio " + lista + " puede adquirir su Credito");
+                        vista.getBtn_aprobar().setEnabled(true);
                     }
-                    vista.getTxt_garantes().setText(mensaje);
+
                 }
+
+                if (op == 0) {
+                    codigo_socio = so.codigoSocio(vista.getTxt_cedulaG1().getText());
+                    String mensaje = null;
+
+                    if (codigo_socio != 0) {
+                        mensaje = comprobarGarante(codigo_socio);
+                        System.out.println(mensaje + " mensajeeeee1");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Cedula garante 1 incorrecta", "", 0);
+
+                    }
+
+                    codigo_socio = so.codigoSocio(vista.getTxt_G2().getText());
+                    if (!vista.getTxt_G2().getText().equals("")) {
+                        if (codigo_socio != 0) {
+                            mensaje = mensaje + " " + comprobarGarante(codigo_socio);
+                        } else {
+
+                            JOptionPane.showMessageDialog(null, "Cedula garante 2 incorrecta", "", 0);
+                        }
+                        vista.getTxt_garantes().setText(mensaje);
+                        vista.getBtn_aprobar().setEnabled(true);
+                    }
+                }
+
             }
         }
 
@@ -236,6 +256,7 @@ public class ControlCredito {
                 vista.getjDialog1().setTitle("Editar Credito");
                 n = 2;
                 vista.getjDialog1().setVisible(true);
+                vista.getBtn_aprobar().setText("Guardar");
             }
         }
     }
@@ -259,6 +280,7 @@ public class ControlCredito {
 
     }
 
+    // Metdo para listar mediante el combo box ya sean los creditosd pagados o vigentes
     public void filtracion(String estado) {
         List<Credito> lista = new ArrayList<Credito>();
         lista = modelo.filtrarCredito(estado);
@@ -329,16 +351,51 @@ public class ControlCredito {
         int codigo = Integer.parseInt(vista.getTabla().getValueAt(fila1, 0).toString());
         List<Credito> lista = modelo.listarCredito(codigo);
 
+        String cedula = null;
+
         for (int i = 0; i < lista.size(); i++) {
             vista.getCedula_D().setText(modelo.cedulas(Integer.parseInt(lista.get(i).getDeudor())));
+
+            cedula = lista.get(i).getGarante1();
+            if (cedula != null) {
+                vista.getTxt_cedulaG1().setText(modelo.cedulas(Integer.parseInt(lista.get(i).getGarante1())));
+            } else {
+                vista.getTxt_cedulaG1().setText("");
+            }
+
             vista.getTxt_cedulaG1().setText(modelo.cedulas(Integer.parseInt(lista.get(i).getGarante1())));
-            vista.getTxt_G2().setText(modelo.cedulas(Integer.parseInt(lista.get(i).getGarante2())));
+            cedula = lista.get(i).getGarante2();
+
+            if (cedula != null) {
+                vista.getTxt_G2().setText(modelo.cedulas(Integer.parseInt(lista.get(i).getGarante2())));
+            } else {
+                vista.getTxt_G2().setText("");
+            }
+
             vista.getTxt_capital().setText(String.valueOf(lista.get(i).getCapital()));
             vista.getTxt_tasa().setText(String.valueOf(lista.get(i).getInteres()));
             vista.getTxt_plazo().setText(String.valueOf(lista.get(i).getPlazo()));
             vista.getTxt_observacion().setText(lista.get(i).getObservacion());
         }
 
+    }
+    
+    
+    public void editarCredito(){
+          int fila1 = vista.getTabla().getSelectedRow();
+        int codigo = Integer.parseInt(vista.getTabla().getValueAt(fila1, 0).toString());
+        
+        //Primero se verificara que no se hayan realizado ningun pago para modificar este Credito.
+        int validarPago;
+        
+        validarPago=modelo.consultarPago(codigo);
+        if (validarPago!=0) {
+            //Aqui se cancela la modificacion ya que el socio pagó una cuota de su credito
+                   
+        }else{
+            // Aqui se procede a modificar ya que este socio no pago niguna cuota
+            
+        }
     }
 
 }

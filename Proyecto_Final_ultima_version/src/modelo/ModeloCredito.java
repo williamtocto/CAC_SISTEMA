@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 public class ModeloCredito extends Credito {
 
     ConexionPG con = new ConexionPG();
+    Modelo_Socio socio = new Modelo_Socio();
 
     public ModeloCredito(String deudor, String cedulaD, int codigoD, int codigoG1, int codigoG2, String cedulaG1, String cedulaG2, String Garante1, String Garante2, int codigo, double capital, float interes, int plazo, String fecha, String observacion, String estado, String fecha_fin) {
         super(deudor, cedulaD, codigoD, codigoG1, codigoG2, cedulaG1, cedulaG2, Garante1, Garante2, codigo, capital, interes, plazo, fecha, observacion, estado, fecha_fin);
@@ -20,17 +21,30 @@ public class ModeloCredito extends Credito {
 
     public boolean grabarCredito() {
         String sql = "";
-        if (getCodigoG2() != 0) {
+        if (getCodigoG2() != 0 && getCodigoG1() != 0) {
+            // Aqui se va a guaradar los 2 garantes
             sql = "Insert into credito (cod_socio,garante_1,garante_2,capital,tasa_interes,plazo_meses,"
                     + "fecha_credito,fecha_finalizacion,observacion,estado) values (" + getCodigoD() + "," + getCodigoG1() + ","
                     + getCodigoG2() + "," + getCapital() + "," + getInteres() + "," + getPlazo() + ",'" + getFecha() + "','" + getFecha_fin() + "','"
                     + getObservacion() + "','" + getEstado() + "');";
-        } else {
+        } else if (getCodigoG1() != 0) {
+            //En caso de que le gaantae 2 no exita se proceder a guardar unicamnente el garante 1.
+            
             sql = "Insert into credito (cod_socio,garante_1,capital,tasa_interes,plazo_meses,"
                     + "fecha_credito,fecha_finalizacion,observacion,estado) values (" + getCodigoD() + "," + getCodigoG1()
                     + "," + getCapital() + "," + getInteres() + "," + getPlazo() + ",'" + getFecha() + "','" + getFecha_fin() + "','"
                     + getObservacion() + "','" + getEstado() + "');";
-
+        } else if (getCodigoG2() != 0) {
+            //En caso que el garante uno exista
+            sql = "Insert into credito (cod_socio,garante_2,capital,tasa_interes,plazo_meses,"
+                    + "fecha_credito,fecha_finalizacion,observacion,estado) values (" + getCodigoD() + "," + getCodigoG2()
+                    + "," + getCapital() + "," + getInteres() + "," + getPlazo() + ",'" + getFecha() + "','" + getFecha_fin() + "','"
+                    + getObservacion() + "','" + getEstado() + "');";
+        } else {
+            //En caso de que no exista nigun garante
+            sql = "Insert into credito (cod_socio,capital,tasa_interes,plazo_meses,"
+                    + "fecha_credito,fecha_finalizacion,observacion,estado) values (" + getCodigoD() + "," + getCapital() + "," + getInteres() + "," + getPlazo() + ",'" + getFecha() + "','" + getFecha_fin() + "','"
+                    + getObservacion() + "','" + getEstado() + "');";
         }
 
         return con.accion(sql);
@@ -46,36 +60,51 @@ public class ModeloCredito extends Credito {
                 cod = rs.getInt("codigo");
             }
             return cod;
+
         } catch (SQLException ex) {
-            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModeloCredito.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return 0;
         }
 
     }
 
     public List<Credito> cargarLista(String aguja) {
+        System.out.println(aguja + " agujaaaaaaaaaaaaaaaaaaaaaaaa");
         String sql = "select cod_credito,s1.nombre_socio||' '||s1.apellido_socio as deudor,"
-                + "s2.nombre_socio||' '|| s2.apellido_socio as garante_1,"
-                + "s3.nombre_socio||' '||s3.apellido_socio as garante_2,"
+                + "garante_1,"
+                + "garante_2,"
                 + "capital,tasa_interes,plazo_meses,fecha_credito,fecha_finalizacion,observacion,estado "
                 + "from socio s1 join credito c1 on c1.cod_socio=s1.codigo_socio "
-                + "join socio s2 on c1.garante_1=s2.codigo_socio "
-                + "join socio s3 on c1.garante_2=s3.codigo_socio "
-                + "where UPPER(s1.nombre_socio||' '||s1.apellido_socio)like  UPPER('%" + aguja + "%') OR "
-                + "UPPER(s2.nombre_socio||' '|| s2.apellido_socio) like UPPER('%" + aguja + "%') OR "
-                + "UPPER(s3.nombre_socio||' '|| s3.apellido_socio) like UPPER('%" + aguja + "%');";
+                + "where UPPER(s1.nombre_socio||' '||s1.apellido_socio)like  UPPER('%" + aguja + "%'); ";
 
         List<Credito> lista = new ArrayList<Credito>();
         ResultSet rs = con.consulta(sql);
 
         try {
-
+            String garante_1;
+            String garante_2;
             while (rs.next()) {
+                System.out.println("ingreseeeeeeeeeeeeeeeeeeeeeeeeee");
                 Credito c = new Credito();
                 c.setCodigo(rs.getInt("cod_credito"));
                 c.setDeudor(rs.getString("deudor"));
-                c.setGarante1(rs.getString("garante_1"));
-                c.setGarante2(rs.getString("garante_2"));
+
+                if (rs.getString("garante_1") == null) {
+                    garante_1 = "Sin garante";
+                } else {
+                    garante_1 = socio.nombre(rs.getString("garante_1"));
+                }
+
+                c.setGarante1(garante_1);
+
+                if (rs.getString("garante_2") == null) {
+                    garante_2 = "Sin garante";
+                } else {
+                    garante_2 = socio.nombre(rs.getString("garante_2"));
+                }
+
+                c.setGarante2(garante_2);
                 c.setCapital(rs.getDouble("capital"));
                 c.setInteres(rs.getFloat("tasa_interes"));
                 c.setPlazo(rs.getInt("plazo_meses"));
@@ -86,6 +115,7 @@ public class ModeloCredito extends Credito {
                 lista.add(c);
             }
             rs.close();
+            /*
             String sql1 = "select cod_credito,s1.nombre_socio||' '||s1.apellido_socio as deudor,"
                     + "s2.nombre_socio||' '|| s2.apellido_socio as garante_1,"
                     + "s3.nombre_socio||' '||s3.apellido_socio as garante_2,"
@@ -98,76 +128,105 @@ public class ModeloCredito extends Credito {
             ResultSet rs1 = con.consulta(sql1);
 
             while (rs1.next()) {
+                System.out.println("ingreseeeeeeeeeeeeeeeeeeeeeeeeee");
                 Credito c = new Credito();
-                c.setCodigo(rs1.getInt("cod_credito"));
-                c.setDeudor(rs1.getString("deudor"));
-                c.setGarante1(rs1.getString("garante_1"));
-                c.setGarante2(rs1.getString("garante_2"));
-                c.setCapital(rs1.getDouble("capital"));
-                c.setInteres(rs1.getFloat("tasa_interes"));
-                c.setPlazo(rs1.getInt("plazo_meses"));
-                c.setFecha(rs1.getString("fecha_credito"));
-                c.setFecha_fin(rs1.getString("fecha_finalizacion"));
-                c.setObservacion(rs1.getString("observacion"));
-                c.setEstado(rs1.getString("estado"));
-                lista.add(c);
-            }
-            rs1.close();
+                c.setCodigo(rs.getInt("cod_credito"));
+                c.setDeudor(rs.getString("deudor"));
 
+                if (rs.getString("garante_1") == null) {
+                    garante_1 = "Sin garante";
+                } else {
+                    garante_1 = socio.nombre(rs.getString("garante_1"));
+                }
+
+                c.setGarante1(garante_1);
+
+                if (rs.getString("garante_2") == null) {
+                    garante_2 = "Sin garante";
+                } else {
+                    garante_2 = socio.nombre(rs.getString("garante_2"));
+                }
+
+                c.setGarante2(garante_2);
+                c.setCapital(rs.getDouble("capital"));
+                c.setInteres(rs.getFloat("tasa_interes"));
+                c.setPlazo(rs.getInt("plazo_meses"));
+                c.setFecha(rs.getString("fecha_credito"));
+                c.setFecha_fin(rs.getString("fecha_finalizacion"));
+                c.setObservacion(rs.getString("observacion"));
+                c.setEstado(rs.getString("estado"));
+                lista.add(c);
+            }*/
+            rs.close();
             return lista;
 
         } catch (SQLException ex) {
 
-            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModeloCredito.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return lista;
         }
 
     }
 
     public List<Credito> filtrarCredito(String aguja) {
+        String garante_1;
+        String garante_2;
 
         List<Credito> lista = new ArrayList<Credito>();
         String sql1;
         if (!aguja.equals("")) {
             sql1 = "select cod_credito,s1.nombre_socio||' '||s1.apellido_socio as deudor,"
-                    + "s2.nombre_socio||' '|| s2.apellido_socio as garante_1,"
-                    + "s3.nombre_socio||' '||s3.apellido_socio as garante_2,"
+                    + "garante_1,"
+                    + "garante_2,"
                     + " capital,tasa_interes,plazo_meses,fecha_credito,fecha_finalizacion,observacion,estado "
                     + "from socio s1 join credito c1 on c1.cod_socio=s1.codigo_socio "
-                    + "join socio s2 on c1.garante_1=s2.codigo_socio "
-                    + "join socio s3 on c1.garante_2=s3.codigo_socio "
                     + " where estado= '" + aguja + "'";
 
         } else {
             sql1 = "select cod_credito,s1.nombre_socio||' '||s1.apellido_socio as deudor,"
-                    + "s2.nombre_socio||' '|| s2.apellido_socio as garante_1,"
-                    + "s3.nombre_socio||' '||s3.apellido_socio as garante_2,"
+                    + "garante_1,"
+                    + "garante_2,"
                     + " capital,tasa_interes,plazo_meses,fecha_credito,fecha_finalizacion,observacion,estado "
-                    + "from socio s1 join credito c1 on c1.cod_socio=s1.codigo_socio "
-                    + "join socio s2 on c1.garante_1=s2.codigo_socio "
-                    + "join socio s3 on c1.garante_2=s3.codigo_socio ";
+                    + "from socio s1 join credito c1 on c1.cod_socio=s1.codigo_socio ";
+
         }
-        ResultSet rs1 = con.consulta(sql1);
+        ResultSet rs = con.consulta(sql1);
         try {
-            while (rs1.next()) {
+            while (rs.next()) {
                 Credito c = new Credito();
-                c.setCodigo(rs1.getInt("cod_credito"));
-                c.setDeudor(rs1.getString("deudor"));
-                c.setGarante1(rs1.getString("garante_1"));
-                c.setGarante2(rs1.getString("garante_2"));
-                c.setCapital(rs1.getDouble("capital"));
-                c.setInteres(rs1.getFloat("tasa_interes"));
-                c.setPlazo(rs1.getInt("plazo_meses"));
-                c.setFecha(rs1.getString("fecha_credito"));
-                c.setFecha_fin(rs1.getString("fecha_finalizacion"));
-                c.setObservacion(rs1.getString("observacion"));
-                c.setEstado(rs1.getString("estado"));
+                c.setCodigo(rs.getInt("cod_credito"));
+                c.setDeudor(rs.getString("deudor"));
+
+                if (rs.getString("garante_1") == null) {
+                    garante_1 = "Sin garante";
+                } else {
+                    garante_1 = socio.nombre(rs.getString("garante_1"));
+                }
+                c.setGarante1(garante_1);
+                if (rs.getString("garante_2") == null) {
+                    garante_2 = "Sin garante";
+                } else {
+                    garante_2 = socio.nombre(rs.getString("garante_2"));
+                }
+
+                c.setGarante2(garante_2);
+                c.setCapital(rs.getDouble("capital"));
+                c.setInteres(rs.getFloat("tasa_interes"));
+                c.setPlazo(rs.getInt("plazo_meses"));
+                c.setFecha(rs.getString("fecha_credito"));
+                c.setFecha_fin(rs.getString("fecha_finalizacion"));
+                c.setObservacion(rs.getString("observacion"));
+                c.setEstado(rs.getString("estado"));
                 lista.add(c);
             }
-            rs1.close();
+
+            rs.close();
             return lista;
+
         } catch (SQLException ex) {
-            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModeloCredito.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return null;
         }
 
@@ -183,16 +242,12 @@ public class ModeloCredito extends Credito {
                 fila++;
             }
             return fila;
+
         } catch (SQLException ex) {
-            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModeloCredito.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return 0;
         }
-    }
-    
-    public void ModificarCredito() {
-        String sql="UPDATE FROM CREDITO";
-        
-        
     }
 
     public int comprobarSolicitante() {
@@ -205,8 +260,10 @@ public class ModeloCredito extends Credito {
             }
             rs.close();
             return fila;
+
         } catch (SQLException ex) {
-            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModeloCredito.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return fila;
         }
 
@@ -238,7 +295,8 @@ public class ModeloCredito extends Credito {
 
         } catch (SQLException ex) {
 
-            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModeloCredito.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return lista;
         }
 
@@ -259,8 +317,10 @@ public class ModeloCredito extends Credito {
             }
             rs.close();
             return lista;
+
         } catch (SQLException ex) {
-            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModeloCredito.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return null;
         }
 
@@ -273,14 +333,45 @@ public class ModeloCredito extends Credito {
         try {
             while (rs.next()) {
                 Credito c = new Credito();
-                cedula= rs.getString("cedula_socio");
+                cedula = rs.getString("cedula_socio");
             }
             rs.close();
             return cedula;
+
         } catch (SQLException ex) {
-            Logger.getLogger(ModeloCredito.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ModeloCredito.class
+                    .getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+
+    }
+
+    //Sirve para verificar que un credito ya haya sido pagado almenos una letra
+    public int consultarPago(int codigoCredito) {
+        String sql = "select * from amortizacion where estado= 'Pagado' and cod_credito= " + codigoCredito;
+
+        try {
+            int cod = 0;
+
+            ResultSet rs = con.consulta(sql);
+            while (rs.next()) {
+                cod = rs.getInt("codigo");
+            }
+            return cod;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ModeloCredito.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+
+    }
+
+    public void modificarCredito(int codigoCredito) {
+        String sql = "delete from amortizacion where  cod_credito=" + codigoCredito;
+        con.accion(sql);
+
+        String sql1 = "";
 
     }
 
