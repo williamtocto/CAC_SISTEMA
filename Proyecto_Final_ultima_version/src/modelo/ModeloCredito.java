@@ -29,7 +29,7 @@ public class ModeloCredito extends Credito {
                     + getObservacion() + "','" + getEstado() + "');";
         } else if (getCodigoG1() != 0) {
             //En caso de que le gaantae 2 no exita se proceder a guardar unicamnente el garante 1.
-            
+
             sql = "Insert into credito (cod_socio,garante_1,capital,tasa_interes,plazo_meses,"
                     + "fecha_credito,fecha_finalizacion,observacion,estado) values (" + getCodigoD() + "," + getCodigoG1()
                     + "," + getCapital() + "," + getInteres() + "," + getPlazo() + ",'" + getFecha() + "','" + getFecha_fin() + "','"
@@ -345,6 +345,9 @@ public class ModeloCredito extends Credito {
         }
 
     }
+    
+    
+  
 
     //Sirve para verificar que un credito ya haya sido pagado almenos una letra
     public int consultarPago(int codigoCredito) {
@@ -367,12 +370,27 @@ public class ModeloCredito extends Credito {
 
     }
 
-    public void modificarCredito(int codigoCredito) {
+    // Metodo que permite modificar borrar la amortizacion generada 
+    //y despues modifica el credito creando una nueva amortizacion.(la amortizacion se crea gracias aun trigger dentro de la base de datos).
+    public boolean modificarCredito(int codigoCredito) {
         String sql = "delete from amortizacion where  cod_credito=" + codigoCredito;
+        if (con.accion(sql)) {
+            eliminarGarante(codigoCredito);
+            String sql1 = "UPDATE credito set garante_1= " + getCodigoG1() + ", garante_2= " + getGarante2()
+                    + ",capital =  " + getCapital() + ",tasa_interes= " + getInteres() + ", plazo_meses= " + getPlazo() + ",fecha_credito= '" + getFecha() + "' ,fecha_finalizacion= ' " + getFecha_fin()
+                    + "' ,Observacion= '" + getObservacion() + "', estado= '" + getEstado() + "' where cod_credito= "+codigoCredito;
+
+            return con.accion(sql1);
+        } else {
+            return false;
+        }
+
+    }
+    
+
+    public void eliminarGarante(int codigoCredito){
+        String sql="Delete from garante where cod_credito= "+codigoCredito();
         con.accion(sql);
-
-        String sql1 = "";
-
     }
 
 }

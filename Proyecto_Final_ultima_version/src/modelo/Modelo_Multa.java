@@ -76,7 +76,8 @@ public class Modelo_Multa extends Multa {
 
     public void modificarMulta(String fecha) {
         System.out.println(getCodigo_multa());
-        String sql = "Update multa set estado_multa='Pagada', fecha_pago= '" + fecha + "' where codigo_multa= " + getCodigo_multa();
+        String sql = "Update multa set estado_multa='Pagada', "
+                + "fecha_pago= '" + fecha + "' where codigo_multa= " + getCodigo_multa();
         ConexionPG con = new ConexionPG();
         con.accion(sql);
     }

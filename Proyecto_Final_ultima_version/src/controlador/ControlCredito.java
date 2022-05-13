@@ -94,8 +94,6 @@ public class ControlCredito {
         vista.getBtn_verirficar().addActionListener(l -> comprobarSolicitud());
 
     }
-    
-    
 
     public void DefinirMetodo(int n) throws SQLException {
 
@@ -208,8 +206,48 @@ public class ControlCredito {
 
     }
 
+    // Este metodo permite modificar un credito en el caso de que no se haya pagado niguna letra.
     public void modificar() {
+        int op = JOptionPane.showOptionDialog(null, "Esta Seguro de desea modificar este credito", "",
+                JOptionPane.YES_NO_CANCEL_OPTION, 2, null, new Object[]{"SI", "NO",}, null);
 
+        if (op == 0) {
+            
+            int nCredito = Integer.parseInt(vista.getLbl_numeroCredito().getText());
+            
+            Modelo_Socio so = new Modelo_Socio();
+            int codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
+            int garante_1 = so.codigoSocio(vista.getTxt_cedulaG1().getText());
+            int garante_2 = so.codigoSocio(vista.getTxt_G2().getText());
+            double capital = Double.parseDouble(vista.getTxt_capital().getText());
+            float tasa_interes = Float.parseFloat(vista.getTxt_tasa().getText());
+            int plazo_meses = Integer.parseInt(vista.getTxt_plazo().getText());
+            Date fecha_credito;
+            Calendar c = Calendar.getInstance();
+            fecha_credito = c.getTime();
+            c.add(Calendar.MONTH, +plazo_meses);
+            Date fecha_fin = c.getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String formato = sdf.format(fecha_credito);
+            String formato1 = sdf.format(fecha_fin);
+            String Observacion = vista.getTxt_observacion().getText();
+            String estado = "Vigente";
+            modelo.setCodigoD(codigo_socio);
+            modelo.setCodigoG1(garante_1);
+            modelo.setCodigoG2(garante_2);
+            modelo.setPlazo(plazo_meses);
+            modelo.setInteres(tasa_interes);
+            modelo.setCapital(capital);
+            modelo.setFecha(formato);
+            modelo.setFecha_fin(formato1);
+            modelo.setObservacion(Observacion);
+            modelo.setEstado(estado);
+            if (modelo.modificarCredito(nCredito)) {
+                JOptionPane.showMessageDialog(null, "Credito guardado con exito", "CAC", 1);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al grabar", "CAC", 0);
+            }
+        }
     }
 
     public void filtrar() {
@@ -247,12 +285,14 @@ public class ControlCredito {
         if (origen == 1) {
             vista.getjDialog1().setTitle("Registrar Credito");
             n = 1;
+            vista.getLbl_numeroCredito().setVisible(false);
             vista.getjDialog1().setVisible(true);
         } else {
             if (fila == -1) {
                 JOptionPane.showMessageDialog(vista, "SELECCIONE UN DATO DE LA TABLA", "WILLIAM TOCTO", 2);
             } else {
-                // cargarDatos();
+                vista.getLbl_numeroCredito().setVisible(true);
+                 cargarDatos();
                 vista.getjDialog1().setTitle("Editar Credito");
                 n = 2;
                 vista.getjDialog1().setVisible(true);
@@ -299,7 +339,7 @@ public class ControlCredito {
         });
     }
 
-    public void grabarCredito() {
+   public void grabarCredito() {
         int op = JOptionPane.showOptionDialog(null, "Esta Seguro en Aprobar Este Credito", "",
                 JOptionPane.YES_NO_CANCEL_OPTION, 2, null, new Object[]{"SI", "NO",}, null);
 
@@ -350,7 +390,7 @@ public class ControlCredito {
         int fila1 = vista.getTabla().getSelectedRow();
         int codigo = Integer.parseInt(vista.getTabla().getValueAt(fila1, 0).toString());
         List<Credito> lista = modelo.listarCredito(codigo);
-
+        vista.getLbl_numeroCredito().setText(String.valueOf(codigo));
         String cedula = null;
 
         for (int i = 0; i < lista.size(); i++) {
@@ -379,22 +419,22 @@ public class ControlCredito {
         }
 
     }
-    
-    
-    public void editarCredito(){
-          int fila1 = vista.getTabla().getSelectedRow();
+
+    public void editarCredito() {
+        int fila1 = vista.getTabla().getSelectedRow();
         int codigo = Integer.parseInt(vista.getTabla().getValueAt(fila1, 0).toString());
-        
+
         //Primero se verificara que no se hayan realizado ningun pago para modificar este Credito.
         int validarPago;
-        
-        validarPago=modelo.consultarPago(codigo);
-        if (validarPago!=0) {
+
+        validarPago = modelo.consultarPago(codigo);
+        if (validarPago != 0) {
             //Aqui se cancela la modificacion ya que el socio pagó una cuota de su credito
-                   
-        }else{
+
+        } else {
             // Aqui se procede a modificar ya que este socio no pago niguna cuota
-            
+            modificar();
+
         }
     }
 
