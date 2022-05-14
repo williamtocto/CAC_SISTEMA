@@ -372,14 +372,16 @@ public class ModeloCredito extends Credito {
 
     // Metodo que permite modificar borrar la amortizacion generada 
     //y despues modifica el credito creando una nueva amortizacion.(la amortizacion se crea gracias aun trigger dentro de la base de datos).
-    public boolean modificarCredito(int codigoCredito) {
+    public boolean modificarCredito(int codigoCredito,int codigoD,int g1, int g2, double capital, double tInteres,int plazo,String fecha,String fechaFin,String observacion) {
         String sql = "delete from amortizacion where  cod_credito=" + codigoCredito;
         if (con.accion(sql)) {
             eliminarGarante(codigoCredito);
-            String sql1 = "UPDATE credito set garante_1= " + getCodigoG1() + ", garante_2= " + getGarante2()
-                    + ",capital =  " + getCapital() + ",tasa_interes= " + getInteres() + ", plazo_meses= " + getPlazo() + ",fecha_credito= '" + getFecha() + "' ,fecha_finalizacion= ' " + getFecha_fin()
-                    + "' ,Observacion= '" + getObservacion() + "', estado= '" + getEstado() + "' where cod_credito= "+codigoCredito;
-
+            String sql1 = "UPDATE credito set cod_socio= "+codigoD+",garante_1= " +g1 + ", garante_2= " + g2
+                    + ",capital =  " + capital + ",tasa_interes= " + tInteres+ ", plazo_meses= " + plazo + ",fecha_credito= '" + fecha + "' ,fecha_finalizacion= ' " +fechaFin
+                    + "' ,Observacion= '" + observacion + "', estado= 'Vigente' where cod_credito= "+codigoCredito;
+            System.out.println("garntea 1 "+ g1);
+            System.out.println(g2+" garante 2         codifgo deudor "+codigoD );
+            System.out.println(codigoCredito+" codigo credito");
             return con.accion(sql1);
         } else {
             return false;
@@ -389,7 +391,9 @@ public class ModeloCredito extends Credito {
     
 
     public void eliminarGarante(int codigoCredito){
-        String sql="Delete from garante where cod_credito= "+codigoCredito();
+        String sql="Delete from garante where cod_credito= "+codigoCredito;
+ 
+        System.out.println("metodo para eliminar");
         con.accion(sql);
     }
 

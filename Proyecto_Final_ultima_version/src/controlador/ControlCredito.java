@@ -26,9 +26,12 @@ public class ControlCredito {
     private Vista_credito vista;
     int fila = -1;
     int n;
+//
+//    int codigo_socio = 0;
+//    int garante_1 = 0;
+//    int garante_2 = 0;
 
     public ControlCredito(ModeloCredito modelo, Vista_credito vista) {
-        System.out.println("Te amoooo");
         this.modelo = modelo;
         this.vista = vista;
         vista.setTitle("Creditos");
@@ -67,6 +70,7 @@ public class ControlCredito {
         vista.getBtn_aprobar().addActionListener(l -> {
             try {
                 DefinirMetodo(n);
+                System.out.println("n:" + n);
             } catch (SQLException ex) {
                 Logger.getLogger(ControlCredito.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -212,16 +216,16 @@ public class ControlCredito {
                 JOptionPane.YES_NO_CANCEL_OPTION, 2, null, new Object[]{"SI", "NO",}, null);
 
         if (op == 0) {
-            
-            int nCredito = Integer.parseInt(vista.getLbl_numeroCredito().getText());
-            
             Modelo_Socio so = new Modelo_Socio();
+            int nCredito = Integer.parseInt(vista.getLbl_numeroCredito().getText());
+
             int codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
             int garante_1 = so.codigoSocio(vista.getTxt_cedulaG1().getText());
             int garante_2 = so.codigoSocio(vista.getTxt_G2().getText());
             double capital = Double.parseDouble(vista.getTxt_capital().getText());
             float tasa_interes = Float.parseFloat(vista.getTxt_tasa().getText());
             int plazo_meses = Integer.parseInt(vista.getTxt_plazo().getText());
+            System.out.println(plazo_meses+ " Plazo meses");
             Date fecha_credito;
             Calendar c = Calendar.getInstance();
             fecha_credito = c.getTime();
@@ -231,19 +235,10 @@ public class ControlCredito {
             String formato = sdf.format(fecha_credito);
             String formato1 = sdf.format(fecha_fin);
             String Observacion = vista.getTxt_observacion().getText();
-            String estado = "Vigente";
-            modelo.setCodigoD(codigo_socio);
-            modelo.setCodigoG1(garante_1);
-            modelo.setCodigoG2(garante_2);
-            modelo.setPlazo(plazo_meses);
-            modelo.setInteres(tasa_interes);
-            modelo.setCapital(capital);
-            modelo.setFecha(formato);
-            modelo.setFecha_fin(formato1);
-            modelo.setObservacion(Observacion);
-            modelo.setEstado(estado);
-            if (modelo.modificarCredito(nCredito)) {
-                JOptionPane.showMessageDialog(null, "Credito guardado con exito", "CAC", 1);
+   
+            System.out.println("Meotodo para modificar");
+            if (modelo.modificarCredito(nCredito,codigo_socio,garante_1,garante_2,capital,tasa_interes,plazo_meses,formato,formato1,Observacion)) {
+                JOptionPane.showMessageDialog(null, "Credito modificado con exito", "CAC", 1);
             } else {
                 JOptionPane.showMessageDialog(null, "Error al grabar", "CAC", 0);
             }
@@ -292,7 +287,7 @@ public class ControlCredito {
                 JOptionPane.showMessageDialog(vista, "SELECCIONE UN DATO DE LA TABLA", "WILLIAM TOCTO", 2);
             } else {
                 vista.getLbl_numeroCredito().setVisible(true);
-                 cargarDatos();
+                cargarDatos();
                 vista.getjDialog1().setTitle("Editar Credito");
                 n = 2;
                 vista.getjDialog1().setVisible(true);
@@ -339,15 +334,15 @@ public class ControlCredito {
         });
     }
 
-   public void grabarCredito() {
+    public void grabarCredito() {
         int op = JOptionPane.showOptionDialog(null, "Esta Seguro en Aprobar Este Credito", "",
                 JOptionPane.YES_NO_CANCEL_OPTION, 2, null, new Object[]{"SI", "NO",}, null);
 
         if (op == 0) {
             Modelo_Socio so = new Modelo_Socio();
-            int codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
-            int garante_1 = so.codigoSocio(vista.getTxt_cedulaG1().getText());
-            int garante_2 = so.codigoSocio(vista.getTxt_G2().getText());
+        int    codigo_socio = so.codigoSocio(vista.getCedula_D().getText());
+         int   garante_1 = so.codigoSocio(vista.getTxt_cedulaG1().getText());
+        int    garante_2 = so.codigoSocio(vista.getTxt_G2().getText());
             double capital = Double.parseDouble(vista.getTxt_capital().getText());
             float tasa_interes = Float.parseFloat(vista.getTxt_tasa().getText());
             int plazo_meses = Integer.parseInt(vista.getTxt_plazo().getText());
