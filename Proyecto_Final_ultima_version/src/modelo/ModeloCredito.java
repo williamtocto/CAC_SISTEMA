@@ -396,5 +396,20 @@ public class ModeloCredito extends Credito {
         System.out.println("metodo para eliminar");
         con.accion(sql);
     }
-
+    
+    public boolean eliminarCredito(String codigo) {
+        String sql = "delete from garante where cod_credito='" + codigo + "'";    
+        if (con.accion(sql) == true) {
+             String sq2 = "delete from amortizacion where cod_credito='" + codigo + "'";
+             if (con.accion(sq2) == true) {
+                 String sq3 = "delete from credito where cod_credito='" + codigo + "'";
+                 if (con.accion(sq3) == true) {                     
+                 }  
+            }
+           return true;  
+        } else {
+            System.out.println("Error eliminar");
+            return false;
+        }
+    }
 }

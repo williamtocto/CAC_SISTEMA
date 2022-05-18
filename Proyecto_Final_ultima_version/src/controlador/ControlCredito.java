@@ -46,7 +46,7 @@ public class ControlCredito {
     }
 
     public void IniciarControl() {
-
+        vista.getBtn_eliminar().addActionListener(l->eliminarCredito());
         vista.getTabla().addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablaMouseClicked(evt);
@@ -430,6 +430,21 @@ public class ControlCredito {
             // Aqui se procede a modificar ya que este socio no pago niguna cuota
             modificar();
 
+        }
+    }
+    
+    public void eliminarCredito(){
+        DefaultTableModel tabla;
+        tabla = (DefaultTableModel) vista.getTabla().getModel();
+        String id = (String) tabla.getValueAt(vista.getTabla().getSelectedRow(), 0);
+        int resp = JOptionPane.showConfirmDialog(null, "Confirme si esta seguro de ELIMINAR EL CREDITO...");
+        if (resp == 0) {
+            if (modelo.eliminarCredito(id)){
+                JOptionPane.showMessageDialog(null, "Datos Eliminados");
+                 cargarlista("");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al eliminar");
+            }
         }
     }
 
