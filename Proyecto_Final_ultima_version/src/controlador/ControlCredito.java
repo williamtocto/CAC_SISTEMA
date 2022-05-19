@@ -239,6 +239,8 @@ public class ControlCredito {
             System.out.println("Meotodo para modificar");
             if (modelo.modificarCredito(nCredito,codigo_socio,garante_1,garante_2,capital,tasa_interes,plazo_meses,formato,formato1,Observacion)) {
                 JOptionPane.showMessageDialog(null, "Credito modificado con exito", "CAC", 1);
+                cargarlista("");
+                limpiar();
             } else {
                 JOptionPane.showMessageDialog(null, "Error al grabar", "CAC", 0);
             }
@@ -369,6 +371,8 @@ public class ControlCredito {
 
             if (modelo.grabarCredito()) {
                 JOptionPane.showMessageDialog(null, "Credito guardado con exito", "CAC", 1);
+                cargarlista("");
+                limpiar();
             } else {
                 JOptionPane.showMessageDialog(null, "Error al grabar", "CAC", 0);
             }
@@ -446,6 +450,18 @@ public class ControlCredito {
                 JOptionPane.showMessageDialog(null, "Error al eliminar");
             }
         }
+    }
+     
+    public void limpiar(){
+        vista.getCedula_D().setText("");
+        vista.getTxt_cedulaG1().setText("");
+        vista.getTxt_G2().setText("");
+        vista.getTxt_capital().setText("");
+        vista.getTxt_plazo().setText("");
+        vista.getTxt_tasa().setText("");
+        vista.getTxt_observacion().setText("");
+        vista.getTxt_garantes().setText("");
+        vista.getTxt_solicitante().setText("");
     }
 
 }
